@@ -8,6 +8,13 @@
       "when": 1792302251492,
       "tag": "0000_bicycle_operations",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792397225133,
+      "tag": "0001_atomic_bike_import_and_validation",
+      "breakpoints": true
     }
   ]
 }

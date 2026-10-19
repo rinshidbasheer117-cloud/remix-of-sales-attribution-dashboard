@@ -1,4 +1,5 @@
 # Bicycle operations app
+- [ ] Apply confirmed eight-person roster and deal-level role mapping.
 - [ ] Build inventory intake, guarded lifecycle, available bikes, and sold history with two photos.
 - [ ] Implement opposite commission rates and private employee earnings.
 - [ ] Add secure accounts, staff access management, and photo storage.
