@@ -394,6 +394,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      import_bikes: { Args: { rows: Json }; Returns: number }
       intake_bike: {
         Args: { historical?: boolean; payload: Json }
         Returns: string
