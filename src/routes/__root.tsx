@@ -11,6 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { BikeShell } from "@/components/bike-shell";
+import { Toaster } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -77,18 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Sales by channel · Attribution dashboard" },
-      { name: "description", content: "Which channels earn credit for 12,500 conversions and $2.30M in quarterly sales, recomputed across first touch, linear and last touch models." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Sales by channel · Attribution dashboard" },
-      { property: "og:description", content: "Which channels earn credit for 12,500 conversions and $2.30M in quarterly sales, recomputed across first touch, linear and last touch models." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Sales by channel · Attribution dashboard" },
-      { name: "twitter:description", content: "Which channels earn credit for 12,500 conversions and $2.30M in quarterly sales, recomputed across first touch, linear and last touch models." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3a9d2102-0b07-4318-b940-5c69f8559ac1/id-preview-91313ed9--c5cb6962-2010-4c55-8488-005384dde358.lovable.app-1785493438242.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3a9d2102-0b07-4318-b940-5c69f8559ac1/id-preview-91313ed9--c5cb6962-2010-4c55-8488-005384dde358.lovable.app-1785493438242.png" },
+      { title: "CycleWorks · Bicycle operations" },
     ],
     links: [
       {
@@ -126,11 +118,21 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange(event => {
+      if (!["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"].includes(event)) return;
+      if (event === "SIGNED_OUT") queryClient.clear();
+      else queryClient.invalidateQueries();
+      router.invalidate();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [queryClient, router]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <BikeShell><Outlet /></BikeShell>
+      <Toaster />
     </QueryClientProvider>
   );
 }

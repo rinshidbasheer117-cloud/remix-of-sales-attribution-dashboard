@@ -13,8 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AvailableRouteImport } from './routes/available'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as ImportRouteImport } from './routes/import'
+import { Route as MyPortalRouteImport } from './routes/my-portal'
 import { Route as PipelineRouteImport } from './routes/pipeline'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as TeamRouteImport } from './routes/team'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -36,6 +39,16 @@ const HistoryRoute = HistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImportRoute = ImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyPortalRoute = MyPortalRouteImport.update({
+  id: '/my-portal',
+  path: '/my-portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PipelineRoute = PipelineRouteImport.update({
   id: '/pipeline',
   path: '/pipeline',
@@ -46,22 +59,33 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/available': typeof AvailableRoute
   '/history': typeof HistoryRoute
+  '/import': typeof ImportRoute
+  '/my-portal': typeof MyPortalRoute
   '/pipeline': typeof PipelineRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/available': typeof AvailableRoute
   '/history': typeof HistoryRoute
+  '/import': typeof ImportRoute
+  '/my-portal': typeof MyPortalRoute
   '/pipeline': typeof PipelineRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,24 +93,46 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/available': typeof AvailableRoute
   '/history': typeof HistoryRoute
+  '/import': typeof ImportRoute
+  '/my-portal': typeof MyPortalRoute
   '/pipeline': typeof PipelineRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/available' | '/history' | '/pipeline' | '/reset-password'
+    | '/'
+    | '/auth'
+    | '/available'
+    | '/history'
+    | '/import'
+    | '/my-portal'
+    | '/pipeline'
+    | '/reset-password'
+    | '/team'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/auth' | '/available' | '/history' | '/pipeline' | '/reset-password'
+    | '/'
+    | '/auth'
+    | '/available'
+    | '/history'
+    | '/import'
+    | '/my-portal'
+    | '/pipeline'
+    | '/reset-password'
+    | '/team'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/available'
     | '/history'
+    | '/import'
+    | '/my-portal'
     | '/pipeline'
     | '/reset-password'
+    | '/team'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,8 +140,11 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   AvailableRoute: typeof AvailableRoute
   HistoryRoute: typeof HistoryRoute
+  ImportRoute: typeof ImportRoute
+  MyPortalRoute: typeof MyPortalRoute
   PipelineRoute: typeof PipelineRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  TeamRoute: typeof TeamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -128,6 +177,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/import': {
+      id: '/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof ImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-portal': {
+      id: '/my-portal'
+      path: '/my-portal'
+      fullPath: '/my-portal'
+      preLoaderRoute: typeof MyPortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pipeline': {
       id: '/pipeline'
       path: '/pipeline'
@@ -142,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -150,8 +220,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   AvailableRoute: AvailableRoute,
   HistoryRoute: HistoryRoute,
+  ImportRoute: ImportRoute,
+  MyPortalRoute: MyPortalRoute,
   PipelineRoute: PipelineRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  TeamRoute: TeamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
