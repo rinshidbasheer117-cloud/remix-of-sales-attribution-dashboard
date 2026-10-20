@@ -10,33 +10,141 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AvailableRouteImport } from './routes/available'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as ImportRouteImport } from './routes/import'
+import { Route as MyPortalRouteImport } from './routes/my-portal'
+import { Route as PipelineRouteImport } from './routes/pipeline'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as TeamRouteImport } from './routes/team'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AvailableRoute = AvailableRouteImport.update({
+  id: '/available',
+  path: '/available',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImportRoute = ImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyPortalRoute = MyPortalRouteImport.update({
+  id: '/my-portal',
+  path: '/my-portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PipelineRoute = PipelineRouteImport.update({
+  id: '/pipeline',
+  path: '/pipeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/available': typeof AvailableRoute
+  '/history': typeof HistoryRoute
+  '/import': typeof ImportRoute
+  '/my-portal': typeof MyPortalRoute
+  '/pipeline': typeof PipelineRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/available': typeof AvailableRoute
+  '/history': typeof HistoryRoute
+  '/import': typeof ImportRoute
+  '/my-portal': typeof MyPortalRoute
+  '/pipeline': typeof PipelineRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/available': typeof AvailableRoute
+  '/history': typeof HistoryRoute
+  '/import': typeof ImportRoute
+  '/my-portal': typeof MyPortalRoute
+  '/pipeline': typeof PipelineRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/available'
+    | '/history'
+    | '/import'
+    | '/my-portal'
+    | '/pipeline'
+    | '/reset-password'
+    | '/team'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/available'
+    | '/history'
+    | '/import'
+    | '/my-portal'
+    | '/pipeline'
+    | '/reset-password'
+    | '/team'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/available'
+    | '/history'
+    | '/import'
+    | '/my-portal'
+    | '/pipeline'
+    | '/reset-password'
+    | '/team'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  AvailableRoute: typeof AvailableRoute
+  HistoryRoute: typeof HistoryRoute
+  ImportRoute: typeof ImportRoute
+  MyPortalRoute: typeof MyPortalRoute
+  PipelineRoute: typeof PipelineRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  TeamRoute: typeof TeamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +156,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/available': {
+      id: '/available'
+      path: '/available'
+      fullPath: '/available'
+      preLoaderRoute: typeof AvailableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/import': {
+      id: '/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof ImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-portal': {
+      id: '/my-portal'
+      path: '/my-portal'
+      fullPath: '/my-portal'
+      preLoaderRoute: typeof MyPortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pipeline': {
+      id: '/pipeline'
+      path: '/pipeline'
+      fullPath: '/pipeline'
+      preLoaderRoute: typeof PipelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  AvailableRoute: AvailableRoute,
+  HistoryRoute: HistoryRoute,
+  ImportRoute: ImportRoute,
+  MyPortalRoute: MyPortalRoute,
+  PipelineRoute: PipelineRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  TeamRoute: TeamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
