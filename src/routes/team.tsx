@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useQuery,useQueryClient } from '@tanstack/react-query';
 import { useServerFn } from '@tanstack/react-start';
 import { Users,ShieldCheck } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/notifications';
 import { Button } from '@/components/ui/button';
 import { PageHeading } from '@/components/bike-shell';
 import { WorkspaceGate } from '@/components/workspace-gate';

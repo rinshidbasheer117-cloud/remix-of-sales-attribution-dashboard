@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState,useEffect } from 'react';
 import { useServerFn } from '@tanstack/react-start';
 import { LockKeyhole,Wallet,ArrowUpRight,Bike,ShieldCheck } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/notifications';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PageHeading } from '@/components/bike-shell';

@@ -12,7 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { BikeShell } from "@/components/bike-shell";
-import { Toaster } from "@/components/ui/sonner";
+import { Notifications } from "@/components/ui/notifications";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
@@ -132,7 +132,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <BikeShell><Outlet /></BikeShell>
-      <Toaster />
+      <Notifications />
     </QueryClientProvider>
   );
 }
