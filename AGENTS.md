@@ -6,3 +6,4 @@
 - Keep pure commission calculations independently tested against the database calculation for boundary and attribution consistency.
 - Import spreadsheets through one transactional database function after client-side preview; reject the entire import on a bad row to avoid partial history.
 - Personal earnings require the authenticated employee identity plus a hashed passcode and a short-lived server-validated unlock token; never store unlock tokens in browser storage.
+- Route all action notifications through the shared notification adapter and mount one global Sileo host so updates stay consistent across navigation.
