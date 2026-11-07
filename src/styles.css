@@ -419,3 +419,10 @@ h1,h2,.brand,.section-title,.cover-content h1{font-family:var(--title-font);lett
 .dock-label{font-size:13px;font-weight:600;white-space:nowrap;}
 .app-main{padding-bottom:90px;}
 @media(max-width:640px){.dock{gap:3px;padding:4px;bottom:12px}.dock-item{height:42px;min-width:42px}.dock-active{padding:0 14px}.dock-label{font-size:11px}}
+
+/* Team employee cards — same dark frosted glass, violet glow */
+.team-member{position:relative;overflow:hidden;border:1px solid color-mix(in oklab,var(--glass-fg) 12%,transparent);border-radius:26px;color:var(--glass-fg);background:linear-gradient(180deg,color-mix(in oklab,var(--glass-fg) 7%,var(--glass-bg)) 0%,var(--glass-bg) 50%,color-mix(in oklab,var(--glass-glow) 55%,var(--glass-bg)) 100%);box-shadow:0 18px 40px -16px color-mix(in oklab,var(--glass-glow) 75%,transparent),inset 0 1px 0 color-mix(in oklab,var(--glass-fg) 16%,transparent);backdrop-filter:blur(18px);}
+.team-member .text-muted-foreground{color:var(--glass-muted);}
+.team-member .text-primary{color:var(--pill-glow);}
+.team-member .border-t{border-color:color-mix(in oklab,var(--glass-fg) 12%,transparent);}
+.team-member .employee-avatar{background:color-mix(in oklab,var(--glass-fg) 10%,transparent);color:var(--glass-fg);border-radius:14px;}
