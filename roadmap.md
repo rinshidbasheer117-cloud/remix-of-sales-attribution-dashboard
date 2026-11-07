@@ -6,4 +6,4 @@
 - [x] Add secure accounts, staff access management, and photo storage; link verified owner account.
 - [x] Add spreadsheet import with preview and duplicate checks.
 - [x] Verify signed-in lifecycle and saved commission ledger; run commission and import tests.
-- [ ] Verify private PIN statement with an employee-selected passcode (awaiting owner's passcode setup).
+- [ ] Verify private PIN statement with an employee-selected passcode (awaiting owner's passcode setup).- [x] Restyle pipeline cards (dark glass, violet glow) + glowing pill menu
