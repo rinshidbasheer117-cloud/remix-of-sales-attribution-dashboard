@@ -1,5 +1,5 @@
 # Bicycle operations app
-- [ ] Use Sileo for all bike-stage, account, import, and error notifications.
+- [x] Use Sileo for all bike-stage, account, import, and error notifications; verify desktop and mobile display.
 - [x] Apply confirmed eight-person roster and deal-level role mapping.
 - [x] Build inventory intake, guarded lifecycle, available bikes, and sold history with two photos.
 - [x] Implement opposite commission rates and private employee earnings.
