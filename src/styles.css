@@ -381,6 +381,6 @@ body {background-image:none;} h1,h2,h3,.kpi-value {letter-spacing:0;} .bike-app 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
 /* Sileo uses contrasting defaults; keep notification copy on app surfaces. */
-[data-sileo-viewport][data-theme] [data-sileo-description] {
+body [data-sileo-viewport][data-theme] [data-sileo-description] {
   color: var(--muted-foreground);
 }
