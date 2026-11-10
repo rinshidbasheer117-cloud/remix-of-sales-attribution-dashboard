@@ -440,3 +440,23 @@ h1,h2,.brand,.section-title,.cover-content h1{font-family:var(--title-font);lett
 .pipeline-column .stock-card:nth-child(3n)::after,.lifecycle-step:nth-child(3n)::after,.team-member:nth-child(3n)::after{animation-duration:13s;animation-delay:-6s;}
 @media(prefers-reduced-motion:reduce){.pipeline-column .stock-card,.lifecycle-step,.team-member,.pipeline-column .stock-card::after,.lifecycle-step::after,.team-member::after{animation:none!important;}}
 
+
+/* Swirling colour inside the glass cards */
+@property --swirl{syntax:"<angle>";inherits:false;initial-value:0deg;}
+@keyframes glassSwirl{0%{--swirl:0deg;transform:scale(1);}50%{transform:scale(1.15);}100%{--swirl:360deg;transform:scale(1);}}
+.pipeline-column .stock-card,.lifecycle-step,.team-member{position:relative;overflow:hidden;isolation:isolate;}
+.pipeline-column .stock-card::before,.lifecycle-step::before,.team-member::before{content:"";position:absolute;inset:-40%;z-index:-1;pointer-events:none;opacity:.55;filter:blur(38px);background:conic-gradient(from var(--swirl) at 45% 60%,color-mix(in oklab,var(--glass-glow) 80%,transparent),transparent 25%,color-mix(in oklab,var(--glass-glow-alt) 70%,transparent) 45%,transparent 65%,color-mix(in oklab,var(--glass-glow) 60%,transparent) 85%,color-mix(in oklab,var(--glass-glow) 80%,transparent));animation:glassSwirl 18s linear infinite;}
+.pipeline-column .stock-card:nth-child(2n)::before,.lifecycle-step:nth-child(2n)::before,.team-member:nth-child(2n)::before{animation-duration:22s;animation-delay:-6s;animation-direction:reverse;}
+.pipeline-column .stock-card:nth-child(3n)::before,.lifecycle-step:nth-child(3n)::before,.team-member:nth-child(3n)::before{animation-duration:26s;animation-delay:-12s;}
+@media(prefers-reduced-motion:reduce){.pipeline-column .stock-card::before,.lifecycle-step::before,.team-member::before{animation:none!important;}}
+
+/* Liquid glass buttons */
+.glass-btn:not(.glass-btn-link){position:relative;overflow:hidden;isolation:isolate;border-radius:999px;border:0;color:var(--glass-fg);background:linear-gradient(150deg,color-mix(in oklab,var(--glass-fg) 20%,transparent),color-mix(in oklab,var(--glass-fg) 4%,transparent) 45%,color-mix(in oklab,var(--glass-fg) 14%,transparent)),color-mix(in oklab,var(--glass-bg) 70%,transparent);backdrop-filter:blur(10px) saturate(1.15);box-shadow:inset 0 1px 1px color-mix(in oklab,var(--glass-fg) 75%,transparent),inset 0 -1px 1px color-mix(in oklab,var(--glass-fg) 35%,transparent),inset 0 9px 12px -8px oklch(0 0 0 / .45),inset 0 -9px 9px -7px color-mix(in oklab,var(--glass-fg) 30%,transparent),0 1px 1px oklch(0 0 0 / .16),0 12px 20px -10px oklch(0 0 0 / .35);text-shadow:0 1px 2px oklch(0 0 0 / .3);transition:transform .25s cubic-bezier(.5,1.6,.4,1),box-shadow .25s ease;}
+.glass-btn:not(.glass-btn-link)::before{content:"";position:absolute;inset:-45% -50%;z-index:-1;pointer-events:none;background:linear-gradient(112deg,transparent 30%,color-mix(in oklab,var(--glass-fg) 30%,transparent) 44%,transparent 58%);transform:translateX(-30%);transition:transform .6s ease;}
+.glass-btn:not(.glass-btn-link)::after{content:"";position:absolute;left:14%;right:14%;bottom:1px;height:1px;border-radius:100%;pointer-events:none;background:linear-gradient(90deg,transparent,color-mix(in oklab,var(--glass-fg) 85%,transparent) 50%,transparent);}
+.glass-btn:not(.glass-btn-link):hover{transform:translateY(-1px);background-color:transparent;}
+.glass-btn:not(.glass-btn-link):hover::before{transform:translateX(30%);}
+.glass-btn:not(.glass-btn-link):active{transform:translateY(1px) scale(.98);}
+.glass-btn.bg-primary{background:linear-gradient(150deg,color-mix(in oklab,var(--glass-fg) 35%,transparent),transparent 45%,color-mix(in oklab,var(--glass-fg) 20%,transparent)),color-mix(in oklab,var(--pill-glow) 85%,transparent);color:var(--pill-fg);text-shadow:none;}
+.glass-btn.bg-destructive{background:linear-gradient(150deg,color-mix(in oklab,var(--glass-fg) 30%,transparent),transparent 45%),color-mix(in oklab,var(--destructive) 80%,transparent);}
+@media(prefers-reduced-motion:reduce){.glass-btn::before{transition:none!important;}}

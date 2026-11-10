@@ -7,3 +7,5 @@
 - [x] Add spreadsheet import with preview and duplicate checks.
 - [x] Verify signed-in lifecycle and saved commission ledger; run commission and import tests.
 - [ ] Verify private PIN statement with an employee-selected passcode (awaiting owner's passcode setup).- [x] Restyle pipeline cards (dark glass, violet glow) + glowing pill menu
+- [x] Swirling colour inside glass cards
+- [x] Liquid glass design on all buttons
