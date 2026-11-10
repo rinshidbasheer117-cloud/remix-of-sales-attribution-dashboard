@@ -426,3 +426,17 @@ h1,h2,.brand,.section-title,.cover-content h1{font-family:var(--title-font);lett
 .team-member .text-primary{color:var(--pill-glow);}
 .team-member .border-t{border-color:color-mix(in oklab,var(--glass-fg) 12%,transparent);}
 .team-member .employee-avatar{background:color-mix(in oklab,var(--glass-fg) 10%,transparent);color:var(--glass-fg);border-radius:14px;}
+
+/* Subtle animated gradient drift on the coloured glass cards */
+:root{--glass-glow-alt:oklch(.62 .18 235);--glass-card-bg:radial-gradient(120% 85% at 50% 122%,color-mix(in oklab,var(--glass-glow) 72%,transparent),transparent 70%),radial-gradient(120% 85% at 50% 122%,color-mix(in oklab,var(--glass-glow-alt) 58%,transparent),transparent 70%),linear-gradient(180deg,color-mix(in oklab,var(--glass-fg) 7%,var(--glass-bg)) 0%,var(--glass-bg) 52%,color-mix(in oklab,var(--glass-glow) 28%,var(--glass-bg)) 100%);--glass-card-size:220% 100%,220% 100%,100% 100%;}
+@keyframes glassDrift{0%,100%{background-position:0% 0%,100% 0%,0 0;}50%{background-position:100% 0%,0% 0%,0 0;}}
+@keyframes glassGlow{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:.95;transform:scale(1.1);}}
+.pipeline-column .stock-card,.lifecycle-step,.team-member{background-image:var(--glass-card-bg);background-size:var(--glass-card-size);background-repeat:no-repeat;animation:glassDrift 24s ease-in-out infinite;}
+.pipeline-column .stock-card::after,.team-member::after{content:"";position:absolute;left:12%;right:12%;bottom:-28px;height:58px;background:radial-gradient(ellipse at center,color-mix(in oklab,var(--glass-glow) 85%,transparent),transparent 70%);filter:blur(12px);pointer-events:none;animation:glassGlow 9s ease-in-out infinite;}
+.lifecycle-step::after{animation:glassGlow 9s ease-in-out infinite;}
+.pipeline-column .stock-card:nth-child(2n),.lifecycle-step:nth-child(2n),.team-member:nth-child(2n){animation-duration:30s;}
+.pipeline-column .stock-card:nth-child(3n),.lifecycle-step:nth-child(3n),.team-member:nth-child(3n){animation-duration:36s;animation-delay:-9s;}
+.pipeline-column .stock-card:nth-child(2n)::after,.lifecycle-step:nth-child(2n)::after,.team-member:nth-child(2n)::after{animation-duration:11s;animation-delay:-3s;}
+.pipeline-column .stock-card:nth-child(3n)::after,.lifecycle-step:nth-child(3n)::after,.team-member:nth-child(3n)::after{animation-duration:13s;animation-delay:-6s;}
+@media(prefers-reduced-motion:reduce){.pipeline-column .stock-card,.lifecycle-step,.team-member,.pipeline-column .stock-card::after,.lifecycle-step::after,.team-member::after{animation:none!important;}}
+
