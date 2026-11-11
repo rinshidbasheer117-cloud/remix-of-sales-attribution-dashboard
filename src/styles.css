@@ -506,3 +506,36 @@ h1,h2,.brand,.section-title,.cover-content h1{font-family:var(--title-font);lett
 @keyframes mgPop{from{opacity:0;transform:translateY(-60px) scale(.85);}to{opacity:1;transform:none;}}
 @media(prefers-reduced-motion:reduce){.mg-cards>*,.mg-peek span{animation:none!important;transition:none!important;}}
 .contents-wrap{display:contents;}.mg-cards>*{animation:mgPop .6s cubic-bezier(.34,1.36,.5,1) both;}
+
+/* Night theme for the bicycle palette (glass cards keep their own dark surfaces) */
+.dark{
+ --background:oklch(.17 .012 270);--foreground:oklch(.96 .005 260);--card:oklch(.22 .014 270);--card-foreground:var(--foreground);
+ --primary:oklch(.78 .13 163);--primary-foreground:oklch(.16 .02 160);--ring:var(--primary);--border:oklch(.32 .014 270);--input:var(--border);
+ --muted:oklch(.26 .014 270);--muted-foreground:oklch(.74 .012 260);--accent:oklch(.3 .02 270);--accent-foreground:var(--foreground);
+ --secondary:var(--muted);--secondary-foreground:var(--foreground);--popover:var(--card);--popover-foreground:var(--foreground);
+ --sidebar:oklch(.19 .013 270);--destructive:oklch(.7 .19 22);
+ --stage-service:oklch(.8 .14 74);--stage-inspection:oklch(.78 .11 221);--stage-listing:oklch(.76 .14 305);--stage-available:oklch(.78 .13 161);--stage-sold:oklch(.75 .02 260);
+}
+html{transition:background-color .5s ease,color .5s ease;} body{background:var(--background);color:var(--foreground);}
+
+/* Corner day/night toggle on the cover */
+.corner-toggle{position:absolute;top:14px;right:14px;width:118px;height:150px;z-index:3;pointer-events:none;--knob-glow:oklch(.8 .14 50);}
+.corner-toggle[data-night]{--knob-glow:oklch(.6 .25 330);}
+.corner-track{position:absolute;top:8px;right:20px;width:92px;height:122px;border:12px solid color-mix(in oklab,var(--cover-foreground) 14%,transparent);border-left:0;border-bottom:0;border-top-right-radius:70px;box-shadow:inset 0 1px 2px oklch(0 0 0 / .25);}
+.corner-track::after{content:"";position:absolute;inset:-12px 0 0 -2px;border:3px solid transparent;border-top-right-radius:70px;}
+.corner-toggle[data-night] .corner-track{border-color:color-mix(in oklab,var(--knob-glow) 45%,transparent);filter:drop-shadow(0 0 10px var(--knob-glow));}
+.corner-capsule{pointer-events:auto;position:absolute;top:0;right:60px;width:58px;height:40px;border-radius:999px;display:flex;align-items:center;padding:0 5px;cursor:pointer;overflow:hidden;
+ background:linear-gradient(150deg,oklch(1 0 0 / .55),oklch(1 0 0 / .12));border:1px solid oklch(1 0 0 / .6);backdrop-filter:blur(10px) saturate(1.2);
+ box-shadow:0 10px 24px -8px oklch(0 0 0 / .45),inset 0 1px 0 oklch(1 0 0 / .8);transition:top .7s cubic-bezier(.5,1.6,.4,1),right .7s cubic-bezier(.5,1.6,.4,1),width .7s,height .7s,transform .2s;}
+.corner-capsule:hover{transform:scale(1.05);} .corner-capsule:active{transform:scale(.95);}
+.corner-capsule:focus-visible{outline:2px solid var(--cover-accent);outline-offset:3px;}
+.corner-capsule::before{content:"";position:absolute;top:-2px;left:4px;width:34px;height:8px;border-radius:50%;background:radial-gradient(oklch(1 0 0),transparent 70%);filter:blur(1px);}
+.corner-knob{position:relative;z-index:1;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,oklch(1 0 0),oklch(.88 0 0));color:oklch(.2 0 0);box-shadow:0 2px 6px oklch(0 0 0 / .3);transition:transform .7s cubic-bezier(.5,1.6,.4,1),background .5s,color .5s;}
+.corner-knob svg{animation:sunSpin 8s linear infinite;}
+.corner-glow{position:absolute;right:4px;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;background:var(--knob-glow);filter:blur(6px);transition:all .7s cubic-bezier(.5,1.6,.4,1);}
+.corner-toggle[data-night] .corner-capsule{top:84px;right:0;width:40px;height:58px;flex-direction:column;padding:5px 0;background:linear-gradient(150deg,oklch(1 0 0 / .22),oklch(.3 .03 280 / .4));}
+.corner-toggle[data-night] .corner-knob{background:radial-gradient(circle at 35% 30%,oklch(.55 .03 280),oklch(.3 .03 280));color:oklch(.97 0 0);transform:rotate(180deg);}
+.corner-toggle[data-night] .corner-glow{right:9px;top:auto;bottom:2px;margin-top:0;}
+@keyframes sunSpin{to{transform:rotate(360deg);}}
+@media(prefers-reduced-motion:reduce){.corner-knob svg{animation:none;}.corner-capsule,.corner-knob,.corner-glow{transition:none;}}
+@media(max-width:640px){.corner-toggle{transform:scale(.85);transform-origin:top right;}}

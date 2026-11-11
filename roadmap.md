@@ -11,3 +11,7 @@
 - [x] Liquid glass design on all buttons
 - [x] Moving gradient background on all cards, different colour per card
 - [x] Sold history: milk glass folder with sold-date picker; expand shows only that date's bikes in a uniform row
+
+- [x] Day/night switch on the top-right corner of the home cover, animated like the reference video
+- [x] Every card and section readable in both day and night
+- [x] Sold folder: pick a date range (e.g. Nov 10 – Dec 20) or quick periods
