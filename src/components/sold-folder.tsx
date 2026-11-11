@@ -25,6 +25,6 @@ export function SoldFolder({ bikes, renderCard }: { bikes: Bike[]; renderCard: (
         </div>
       </div>
     </div>
-    {open && (shown.length ? <div className="mg-cards" key={day ?? ''}>{shown.map((b, i) => <div key={b.id} style={{ ['--i' as string]: i }} className="contents-wrap">{renderCard(b, i)}</div>)}</div> : <p className="text-sm text-muted-foreground">No bikes sold on this date.</p>)}
+    {open && (shown.length ? <div className="mg-cards" key={day ?? ''}>{shown.map((b, i) => renderCard(b, i))}</div> : <p className="text-sm text-muted-foreground">No bikes sold on this date.</p>)}
   </div>;
 }

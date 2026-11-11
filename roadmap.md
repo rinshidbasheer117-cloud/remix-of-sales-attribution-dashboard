@@ -9,5 +9,5 @@
 - [ ] Verify private PIN statement with an employee-selected passcode (awaiting owner's passcode setup).- [x] Restyle pipeline cards (dark glass, violet glow) + glowing pill menu
 - [x] Swirling colour inside glass cards
 - [x] Liquid glass design on all buttons
-- [ ] Moving gradient background on all cards, different colour per card
-- [ ] Sold history: milk glass folder with sold-date picker; expand shows only that date's bikes in a uniform row
+- [x] Moving gradient background on all cards, different colour per card
+- [x] Sold history: milk glass folder with sold-date picker; expand shows only that date's bikes in a uniform row
