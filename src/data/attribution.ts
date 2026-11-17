@@ -27,13 +27,7 @@
  */
 
 export type ChannelId =
-  | "paid-search"
-  | "paid-social"
-  | "email"
-  | "organic"
-  | "display"
-  | "referral"
-  | "direct";
+  "paid-search" | "paid-social" | "email" | "organic" | "display" | "referral" | "direct";
 
 export type AttributionModel = "first" | "linear" | "last";
 
@@ -85,14 +79,32 @@ export interface Channel {
 }
 
 export const CHANNELS: Channel[] = [
-  { id: "paid-search", name: "Paid search", short: "Search", color: "var(--ch-paid-search)", spend: 185_000 },
-  { id: "paid-social", name: "Paid social", short: "Social", color: "var(--ch-paid-social)", spend: 150_000 },
+  {
+    id: "paid-search",
+    name: "Paid search",
+    short: "Search",
+    color: "var(--ch-paid-search)",
+    spend: 185_000,
+  },
+  {
+    id: "paid-social",
+    name: "Paid social",
+    short: "Social",
+    color: "var(--ch-paid-social)",
+    spend: 150_000,
+  },
   { id: "email", name: "Email", short: "Email", color: "var(--ch-email)", spend: 42_000 },
   // Organic and direct carry no media budget, like a real report. Their ROAS
   // and CPA render as dashes and they sit out of the spend-vs-return plot.
   { id: "organic", name: "Organic", short: "Organic", color: "var(--ch-organic)", spend: 0 },
   { id: "display", name: "Display", short: "Display", color: "var(--ch-display)", spend: 82_000 },
-  { id: "referral", name: "Referral", short: "Referral", color: "var(--ch-referral)", spend: 34_000 },
+  {
+    id: "referral",
+    name: "Referral",
+    short: "Referral",
+    color: "var(--ch-referral)",
+    spend: 34_000,
+  },
   { id: "direct", name: "Direct", short: "Direct", color: "var(--ch-direct)", spend: 0 },
 ];
 
@@ -140,7 +152,7 @@ const WEEKLY_SHAPE: Record<ChannelId, number[]> = {
 /* -------------------------------------------------------------------------
  * 5. Observed journeys — the single source of truth for credit
  *
- * Fourteen archetypes covering all 12,500 conversions (shares sum to 1).
+ * Seventeen archetypes covering all 12,500 conversions (shares sum to 1).
  * The mix is authored to mirror a real B2B SaaS quarter:
  *   - single-touch closes exist (branded search, word of mouth)
  *   - social and display start journeys but almost never close them
@@ -158,7 +170,7 @@ export interface ConversionPath {
 
 export const PATHS: ConversionPath[] = [
   // Short, fast closes
-  { steps: ["paid-search"], share: 0.05, daysToClose: 2.6 },
+  { steps: ["paid-search"], share: 0.04, daysToClose: 2.6 },
   { steps: ["direct"], share: 0.03, daysToClose: 1.4 },
   { steps: ["organic", "direct"], share: 0.06, daysToClose: 7.8 },
   { steps: ["referral", "paid-search"], share: 0.03, daysToClose: 9.3 },
@@ -175,14 +187,42 @@ export const PATHS: ConversionPath[] = [
   { steps: ["paid-search", "display", "paid-social"], share: 0.03, daysToClose: 22.5 },
   { steps: ["organic", "paid-search", "email", "display"], share: 0.02, daysToClose: 20.4 },
   // Full-funnel and outbound-started deals
-  { steps: ["paid-social", "display", "organic", "paid-search", "email"], share: 0.09, daysToClose: 31.5 },
-  { steps: ["email", "paid-search", "paid-social", "organic", "email"], share: 0.08, daysToClose: 27.3 },
-  { steps: ["paid-search", "email", "referral", "organic", "email", "direct"], share: 0.08, daysToClose: 38.2 },
+  {
+    steps: ["paid-social", "display", "organic", "paid-search", "email"],
+    share: 0.09,
+    daysToClose: 31.5,
+  },
+  {
+    steps: ["email", "paid-search", "paid-social", "organic", "email"],
+    share: 0.08,
+    daysToClose: 27.3,
+  },
+  {
+    steps: ["paid-search", "email", "referral", "organic", "email", "direct"],
+    share: 0.08,
+    daysToClose: 38.2,
+  },
   // Long enterprise evaluations
-  { steps: ["paid-social", "display", "email", "organic", "email", "paid-search", "organic"], share: 0.07, daysToClose: 47.6 },
-  { steps: ["display", "paid-social", "organic", "email", "paid-search", "email", "organic", "referral"], share: 0.07, daysToClose: 61.4 },
+  {
+    steps: ["paid-social", "display", "email", "organic", "email", "paid-search", "organic"],
+    share: 0.07,
+    daysToClose: 47.6,
+  },
+  {
+    steps: [
+      "display",
+      "paid-social",
+      "organic",
+      "email",
+      "paid-search",
+      "email",
+      "organic",
+      "referral",
+    ],
+    share: 0.08,
+    daysToClose: 61.4,
+  },
 ];
-
 
 /* -------------------------------------------------------------------------
  * 6. Derivations — nothing below needs editing to remix
@@ -218,9 +258,7 @@ function buildModel(model: AttributionModel): ChannelMetrics[] {
   const raw = CHANNELS.map((c) => shares[c.id] * QUARTER.totalConversions);
   const floors = raw.map(Math.floor);
   let remaining = QUARTER.totalConversions - floors.reduce((a, b) => a + b, 0);
-  const order = raw
-    .map((v, i) => ({ i, frac: v - Math.floor(v) }))
-    .sort((a, b) => b.frac - a.frac);
+  const order = raw.map((v, i) => ({ i, frac: v - Math.floor(v) })).sort((a, b) => b.frac - a.frac);
   const conversions = [...floors];
   for (const { i } of order) {
     if (remaining <= 0) break;
@@ -265,9 +303,7 @@ export function topChannel(model: AttributionModel): ChannelMetrics {
 }
 
 export function bestRoasChannel(model: AttributionModel): ChannelMetrics {
-  return [...MODEL_DATA[model]]
-    .filter((c) => c.spend > 0)
-    .sort((a, b) => b.roas - a.roas)[0];
+  return [...MODEL_DATA[model]].filter((c) => c.spend > 0).sort((a, b) => b.roas - a.roas)[0];
 }
 
 export const BLENDED_ROAS = QUARTER.totalRevenue / TOTAL_SPEND;
@@ -310,7 +346,6 @@ export function creditShift(model: AttributionModel): CreditShift {
 export function modelLabel(model: AttributionModel): string {
   return MODELS.find((m) => m.id === model)!.label.toLowerCase();
 }
-
 
 /** Which step of a conversion path receives credit under a given model. */
 export function creditedSteps(path: ConversionPath, model: AttributionModel): boolean[] {
@@ -370,8 +405,7 @@ export function roasAtSpend(
   const shape = SATURATION[channel.id];
   if (!shape || channel.spend <= 0 || s <= 0) return Number.NaN;
   const k = shape.sat * channel.spend;
-  const hill = (v: number) =>
-    Math.pow(v, shape.h) / (Math.pow(v, shape.h) + Math.pow(k, shape.h));
+  const hill = (v: number) => Math.pow(v, shape.h) / (Math.pow(v, shape.h) + Math.pow(k, shape.h));
   const vmax = channel.revenue / hill(channel.spend);
   return (vmax * hill(s)) / s;
 }

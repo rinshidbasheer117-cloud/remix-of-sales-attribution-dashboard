@@ -24,14 +24,10 @@ function Kpi({
   accent?: string;
 }) {
   return (
-    <div className="surface-raised px-5 py-5 sm:col-span-6 sm:px-6 xl:col-span-3">
+    <div className="surface-raised col-span-12 px-5 py-5 sm:col-span-6 sm:px-6 xl:col-span-3">
       <div className="flex items-center gap-2">
         {accent ? (
-          <span
-            className="size-2 rounded-full"
-            style={{ backgroundColor: accent }}
-            aria-hidden
-          />
+          <span className="size-2 rounded-full" style={{ backgroundColor: accent }} aria-hidden />
         ) : null}
         <p className="text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
           {label}

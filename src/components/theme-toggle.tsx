@@ -1,17 +1,20 @@
-import { Sun } from 'lucide-react';
-import { useTheme } from '@/hooks/use-theme';
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 
-/** Glass capsule that glides along a curved corner track: day = top, night = right side. */
 export function ThemeToggle() {
   const { theme, toggle } = useTheme();
-  const night = theme === 'dark';
+  const night = theme === "dark";
+
   return (
-    <div className="corner-toggle" data-night={night ? '' : undefined}>
-      <span className="corner-track" aria-hidden />
-      <button type="button" className="corner-capsule" onClick={toggle} role="switch" aria-checked={night} aria-label={night ? 'Switch to day theme' : 'Switch to night theme'}>
-        <span className="corner-knob"><Sun className="size-4" /></span>
-        <span className="corner-glow" aria-hidden />
-      </button>
-    </div>
+    <button
+      type="button"
+      className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      onClick={toggle}
+      role="switch"
+      aria-checked={night}
+      aria-label={night ? "Switch to light theme" : "Switch to dark theme"}
+    >
+      {night ? <Sun className="size-4" aria-hidden /> : <Moon className="size-4" aria-hidden />}
+    </button>
   );
 }
