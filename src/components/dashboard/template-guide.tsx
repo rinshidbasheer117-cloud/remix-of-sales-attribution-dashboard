@@ -101,8 +101,8 @@ export function TemplateGuide() {
           </div>
 
           <p className="mt-5 text-[13px] leading-relaxed text-muted-foreground">
-            After remixing, you make this yours by talking to Lovable in the chat. No code
-            required; describe what you want and it does the wiring. Work through these steps.
+            After remixing, you make this yours by talking to Lovable in the chat. No code required;
+            describe what you want and it does the wiring. Work through these steps.
           </p>
 
           <div className="mt-6 space-y-6">
@@ -138,10 +138,13 @@ export function TemplateGuide() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="surface-raised pointer-events-auto flex h-9 shrink-0 items-center gap-1.5 rounded-2xl px-3.5 text-muted-foreground transition-colors hover:text-foreground"
+        aria-label="Open template guide"
+        className="surface-raised pointer-events-auto flex h-9 shrink-0 items-center gap-1.5 rounded-2xl px-2.5 text-muted-foreground transition-colors hover:text-foreground sm:px-3.5"
       >
         <BookOpen className="size-4" aria-hidden />
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em]">Template guide</span>
+        <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] min-[360px]:inline">
+          Template guide
+        </span>
       </button>
       {mounted ? createPortal(drawer, document.body) : null}
     </>

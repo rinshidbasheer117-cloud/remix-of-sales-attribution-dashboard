@@ -1,29 +1,11 @@
-import { useId, useState } from "react";
-import { QUARTER, roasAtSpend, type ChannelMetrics } from "@/data/attribution";
+import { useState } from "react";
+import { QUARTER, type ChannelMetrics } from "@/data/attribution";
 import { currency, roas } from "@/lib/format";
 import { Panel } from "./panel";
 
 const W = 720;
 const H = 400;
 const PAD = { top: 26, right: 46, bottom: 48, left: 56 };
-
-/** SVG path sampling a channel's modeled ROAS curve between two spend levels. */
-function curveD(
-  c: ChannelMetrics,
-  x: (v: number) => number,
-  y: (v: number) => number,
-  from: number,
-  to: number,
-) {
-  let d = "";
-  for (let i = 0; i <= 32; i++) {
-    const s = from + ((to - from) * i) / 32;
-    const v = roasAtSpend(c, s);
-    if (!Number.isFinite(v)) continue;
-    d += `${d ? "L" : "M"}${x(s).toFixed(1)} ${y(v).toFixed(1)}`;
-  }
-  return d;
-}
 
 /** Nice tick step for the current y range. */
 function stepFor(domain: number) {
@@ -41,8 +23,6 @@ export function ScatterPanel({
   focus?: string[];
 }) {
   const [hover, setHover] = useState<ChannelMetrics | null>(null);
-  const clipId = useId();
-
   const paid = channels.filter((c) => c.spend > 0);
   const unpaid = channels.filter((c) => c.spend === 0);
 
@@ -71,7 +51,7 @@ export function ScatterPanel({
   return (
     <Panel
       title="Spend vs return"
-      subtitle="Bubble size is media budget. Curves model how return decays as spend scales, dashed past current spend."
+      subtitle="Bubble size is media budget. The dashed line marks the 4× return target."
       surface="raised"
       className="h-full"
       bodyClassName="flex flex-col"
@@ -83,9 +63,9 @@ export function ScatterPanel({
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="xMidYMid meet"
           className="h-full max-h-[460px] w-full"
-          role="img"
+          role="group"
+          aria-label="Marketing channel media spend and return scatter plot"
         >
-
           {yTicks.map((v) => (
             <g key={v}>
               <line
@@ -150,44 +130,6 @@ export function ScatterPanel({
             {roas(QUARTER.roasTarget)} ROAS target
           </text>
 
-          {/* Modeled response curves: solid up to each channel's current
-              spend, dashed where the curve extrapolates beyond it. */}
-          <defs>
-            <clipPath id={clipId}>
-              <rect x={PAD.left} y={PAD.top} width={plotW} height={plotH} />
-            </clipPath>
-          </defs>
-          <g clipPath={`url(#${clipId})`}>
-            {paid.map((c) => {
-              const dim =
-                (hover && hover.id !== c.id) || (focus.length > 0 && !focus.includes(c.id));
-              const hot = hover?.id === c.id;
-              return (
-                <g
-                  key={c.id}
-                  style={{
-                    opacity: dim ? 0.08 : hot ? 0.95 : 0.18,
-                    transition: "opacity 200ms",
-                  }}
-                >
-                  <path
-                    d={curveD(c, x, y, maxSpend * 0.02, c.spend)}
-                    fill="none"
-                    stroke={c.color}
-                    strokeWidth={1.5}
-                  />
-                  <path
-                    d={curveD(c, x, y, c.spend, maxSpend * 0.985)}
-                    fill="none"
-                    stroke={c.color}
-                    strokeWidth={1.5}
-                    strokeDasharray="2 5"
-                  />
-                </g>
-              );
-            })}
-          </g>
-
           {paid.map((c) => {
             const dim = (hover && hover.id !== c.id) || (focus.length > 0 && !focus.includes(c.id));
             const radius = r(c.spend);
@@ -200,6 +142,15 @@ export function ScatterPanel({
                 key={c.id}
                 onMouseEnter={() => setHover(c)}
                 onMouseLeave={() => setHover(null)}
+                onFocus={() => setHover(c)}
+                onBlur={() => setHover(null)}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") setHover(null);
+                }}
+                tabIndex={0}
+                role="group"
+                aria-label={`${c.name}: ${currency(c.spend)} spend, ${roas(c.roas)} ROAS, ${currency(c.revenue)} attributed revenue`}
+                className="outline-none focus-visible:opacity-100"
                 style={{ opacity: dim ? 0.3 : 1, transition: "opacity 200ms" }}
               >
                 <circle

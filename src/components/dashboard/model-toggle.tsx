@@ -13,7 +13,7 @@ export function ModelToggle({
 
   return (
     <div
-      role="radiogroup"
+      role="group"
       aria-label="Attribution model"
       className="relative grid w-full min-w-0 grid-cols-3 gap-1 sm:w-auto sm:shrink-0 sm:inline-grid sm:grid-cols-[repeat(3,minmax(124px,1fr))]"
     >
@@ -28,8 +28,8 @@ export function ModelToggle({
       {MODELS.map((m) => (
         <button
           key={m.id}
-          role="radio"
-          aria-checked={model === m.id}
+          type="button"
+          aria-pressed={model === m.id}
           onClick={() => onChange(m.id)}
           className={cn(
             "relative z-10 rounded-xl px-2.5 py-2 text-[13px] font-semibold transition-colors duration-300 sm:px-4 sm:text-sm",

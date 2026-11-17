@@ -10,17 +10,29 @@ import { Panel } from "./panel";
 
 /** The share bar carries the palette too: under first and last touch it takes
  *  the credited channel's colour, under linear it segments across the path. */
-function ShareBar({ path, model }: { path: ConversionPath; model: AttributionModel }) {
+function ShareBar({
+  path,
+  from,
+  to,
+  t,
+}: {
+  path: ConversionPath;
+  from: AttributionModel;
+  to: AttributionModel;
+  t: number;
+}) {
   const width = Math.min(100, (path.share / 0.12) * 100);
-  const credited = creditedSteps(path, model);
-  const creditedColors = path.steps.filter((_, i) => credited[i]).map((s) => channelById[s].color);
-  const unique = Array.from(new Set(creditedColors));
-  const background =
-    unique.length === 1
-      ? unique[0]
-      : `linear-gradient(to right, ${unique
-          .map((c, i) => `${c} ${(i / unique.length) * 100}%, ${c} ${((i + 1) / unique.length) * 100}%`)
-          .join(", ")})`;
+  const start = creditedSteps(path, from);
+  const end = creditedSteps(path, to);
+  const stops = path.steps.flatMap((step, index) => {
+    const credit = (start[index] ? 1 : 0) + ((end[index] ? 1 : 0) - (start[index] ? 1 : 0)) * t;
+    const color = `color-mix(in oklab, ${channelById[step].color} ${Math.round(credit * 100)}%, var(--color-muted))`;
+    return [
+      `${color} ${(index / path.steps.length) * 100}%`,
+      `${color} ${((index + 1) / path.steps.length) * 100}%`,
+    ];
+  });
+  const background = `linear-gradient(to right, ${stops.join(", ")})`;
 
   return (
     <div className="h-1.5 w-20 overflow-hidden rounded-full bg-muted">
@@ -32,7 +44,17 @@ function ShareBar({ path, model }: { path: ConversionPath; model: AttributionMod
   );
 }
 
-export function PathsPanel({ model }: { model: AttributionModel }) {
+export function PathsPanel({
+  model,
+  from = model,
+  to = model,
+  t = 1,
+}: {
+  model: AttributionModel;
+  from?: AttributionModel;
+  to?: AttributionModel;
+  t?: number;
+}) {
   // The panel reads from the same PATHS that drive credit everywhere else.
   // Single-touch closes exist in the data but are not journeys to draw.
   const journeys = [...PATHS]
@@ -51,7 +73,8 @@ export function PathsPanel({ model }: { model: AttributionModel }) {
     >
       <ul className="flex flex-col divide-y divide-border">
         {journeys.map((path) => {
-          const credited = creditedSteps(path, model);
+          const starts = creditedSteps(path, from);
+          const ends = creditedSteps(path, to);
           return (
             <li
               key={path.steps.join(">")}
@@ -60,18 +83,19 @@ export function PathsPanel({ model }: { model: AttributionModel }) {
               <div className="flex min-w-0 flex-1 basis-0 flex-wrap items-center gap-x-1.5 gap-y-1.5">
                 {path.steps.map((step, i) => {
                   const ch = channelById[step];
-                  const isCredited = credited[i];
+                  const credit =
+                    (starts[i] ? 1 : 0) + ((ends[i] ? 1 : 0) - (starts[i] ? 1 : 0)) * t;
                   return (
                     <span key={`${step}-${i}`} className="flex shrink-0 items-center gap-1.5">
                       <span
                         className="rounded-md border px-2 py-1 text-xs font-medium whitespace-nowrap transition-all duration-500"
                         style={{
-                          color: isCredited ? ch.color : "var(--color-muted-foreground)",
-                          borderColor: isCredited ? ch.color : "var(--color-border)",
-                          backgroundColor: isCredited
-                            ? `color-mix(in oklab, ${ch.color} 12%, transparent)`
-                            : "transparent",
-                          opacity: isCredited ? 1 : 0.6,
+                          color: `color-mix(in oklab, ${ch.color} ${Math.round(credit * 100)}%, var(--color-muted-foreground))`,
+                          borderColor: `color-mix(in oklab, ${ch.color} ${Math.round(credit * 65)}%, var(--color-border))`,
+                          backgroundColor: `color-mix(in oklab, ${ch.color} ${Math.round(credit * 12)}%, transparent)`,
+                          opacity: 0.6 + credit * 0.4,
+                          transition:
+                            "color 80ms linear, border-color 80ms linear, background-color 80ms linear, opacity 80ms linear",
                         }}
                       >
                         {ch.name}
@@ -100,7 +124,7 @@ export function PathsPanel({ model }: { model: AttributionModel }) {
               </div>
               <div className="flex shrink-0 items-center gap-5 tnum">
                 <div className="flex items-center gap-2.5">
-                  <ShareBar path={path} model={model} />
+                  <ShareBar path={path} from={from} to={to} t={t} />
                   <span className="w-11 text-right text-xs text-foreground">
                     {percent(path.share)}
                   </span>

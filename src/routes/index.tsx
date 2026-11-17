@@ -1,12 +1,154 @@
-import { createFileRoute,Link } from '@tanstack/react-router';
-import { useState } from 'react';
-import { ArrowUpRight,Plus,Bike,Clock3,CheckCircle2,Wallet,ArrowRight,FileUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useWorkspace } from '@/hooks/use-workspace';
-import { IntakeDialog } from '@/components/bike-forms';
-import { StatusBadge,stages } from '@/components/inventory-view';
-import { aed,pageHead } from '@/lib/commission';
-import { ThemeToggle } from '@/components/theme-toggle';
-import workshop from '@/assets/workshop-bike.jpg';
-export const Route=createFileRoute('/')({head:()=>pageHead('Bicycle operations','CycleWorks premium pre-owned bicycle inventory, workshop lifecycle and employee commissions in Dubai.'),component:Overview});
-function Overview(){const w=useWorkspace();const [intake,setIntake]=useState(false);const bikes=w.data?.bikes??[];const sold=bikes.filter(b=>b.status==='sold');const stats=[{label:'Bikes in inventory',value:w.data?String(bikes.filter(b=>b.status!=='sold').length):'—',detail:'Across workshop & showroom',icon:Bike},{label:'In the workshop',value:w.data?String(bikes.filter(b=>['service','inspection','listing'].includes(b.status)).length):'—',detail:'Service, inspection & listing',icon:Clock3},{label:'Available for sale',value:w.data?String(bikes.filter(b=>b.status==='available').length):'—',detail:'Ready for their next owner',icon:CheckCircle2},{label:'Commission allocated',value:w.data?.operator?aed(w.data.commissions.reduce((n,c)=>n+c.amount,0)):'—',detail:`${sold.length} completed sales`,icon:Wallet}];return <main className="page-content"><div className="mb-7 flex flex-wrap items-center justify-between gap-3"><p className="eyebrow">THE DEALERSHIP AT A GLANCE</p><span className="flex items-center gap-6 text-xs text-muted-foreground">OPERATIONS OVERVIEW<ThemeToggle/></span></div><section className="overview-cover"><img src={workshop} alt="Premium road bicycle prepared in a professional workshop"/><div className="cover-shade"/><div className="cover-content"><p className="cover-eyebrow">PREMIUM PRE-OWNED BICYCLES</p><h1>CycleWorks<span>.</span></h1><p>Every bike has a story.<br/>Every contribution deserves credit.</p><div className="mt-7 flex flex-wrap gap-3">{w.data?.operator?<Button onClick={()=>setIntake(true)}><Plus/>Receive a bike</Button>:<Button asChild><Link to="/auth">Open your workspace<ArrowUpRight/></Link></Button>}<Button asChild variant="outline" className="cover-button"><Link to="/pipeline">Workshop pipeline<ArrowRight/></Link></Button></div></div><div className="cover-note"><span>PROCURE. PREPARE. PASS IT ON.</span><Bike className="size-5"/></div></section><div className="metrics-grid">{stats.map(s=><div className="metric" key={s.label}><p className="metric-label"><s.icon className="size-4"/>{s.label}</p><p className="metric-value">{s.value}</p><p className="mt-2 text-xs text-muted-foreground">{s.detail}</p></div>)}</div><section className="mt-10"><h2 className="section-title">From intake to the next ride<Button asChild variant="link" size="sm"><Link to="/pipeline">View pipeline<ArrowUpRight/></Link></Button></h2><div className="lifecycle-strip">{stages.map((s,i)=><Link to={s.id==='available'?'/available':s.id==='sold'?'/history':'/pipeline'} key={s.id} className={`lifecycle-step stage-${s.id}`}><div className="flex items-center justify-between"><span className="step-number">0{i+1}</span><s.icon className="size-5"/></div><p className="mt-5 text-sm font-semibold">{s.name}</p><p className="mt-2 text-xs text-muted-foreground">{w.data?bikes.filter(b=>b.status===s.id).length:'—'} bikes</p></Link>)}</div></section><section className="mt-10"><h2 className="section-title">Latest bike activity<Button asChild size="sm" variant="link"><Link to="/history">All records<ArrowUpRight/></Link></Button></h2>{w.error?<p className="py-8 text-sm text-destructive">Your records could not be loaded. Please refresh and try again.</p>:!w.user?<div className="overview-empty"><Bike/><div><h3 className="text-sm font-semibold">A new home for your bike records.</h3><p className="mt-2 text-xs text-muted-foreground">Sign in to begin receiving bikes and tracking your team's contributions.</p></div><Button asChild variant="outline" size="sm"><Link to="/auth">Sign in<ArrowRight/></Link></Button></div>:w.data&&!w.data.operator?<div className="overview-empty"><Wallet/><div><h3 className="text-sm font-semibold">Welcome to the team.</h3><p className="mt-2 text-xs text-muted-foreground">Your administrator will approve access and link your employee record.</p></div><Button asChild variant="outline"><Link to="/my-portal">My statement</Link></Button></div>:bikes.length?<div className="table-scroll"><table className="record-table"><thead><tr><th>Bike</th><th>SKU</th><th>Procurement</th><th>Status</th><th>Received</th></tr></thead><tbody>{bikes.slice(0,6).map(b=><tr key={b.id}><td><strong>{b.brand} {b.model}</strong></td><td>{b.sku}</td><td>{w.data?.employees.find(e=>e.id===b.procured_by)?.name}</td><td><StatusBadge status={b.status}/></td><td>{b.purchase_date}</td></tr>)}</tbody></table></div>:<div className="overview-empty"><FileUp/><div><h3 className="text-sm font-semibold">Your inventory starts here.</h3><p className="mt-2 text-xs text-muted-foreground">Receive your first bike or import your past spreadsheet records.</p></div><Button asChild variant="outline" size="sm"><Link to="/import">Import records<ArrowUpRight/></Link></Button></div>}</section><div className="bottom-note"><span className="text-sm font-semibold">Built around your team.</span><span className="text-xs text-muted-foreground">Opposite aging rates. Fair allocations. One shared workflow.</span><Button asChild variant="link" size="sm"><Link to="/team">Meet the team<ArrowRight/></Link></Button></div>{w.data&&<IntakeDialog open={intake} onOpenChange={setIntake} workspace={w.data}/>}</main>}
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { useMemo, useState } from "react";
+import {
+  CHANNELS,
+  MODELS,
+  QUARTER,
+  TOTAL_SPEND,
+  getModelData,
+  type AttributionModel,
+} from "@/data/attribution";
+import { ChannelTable } from "@/components/dashboard/channel-table";
+import { KpiStrip } from "@/components/dashboard/kpi-strip";
+import { ModelToggle } from "@/components/dashboard/model-toggle";
+import { PathsPanel } from "@/components/dashboard/paths-panel";
+import { ScatterPanel } from "@/components/dashboard/scatter-panel";
+import { TemplateGuide } from "@/components/dashboard/template-guide";
+import { WaterfallPanel } from "@/components/dashboard/waterfall-panel";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useTransitionSnapshot } from "@/hooks/use-transition-snapshot";
+import { currency, number } from "@/lib/format";
+import { interpolateModelData } from "@/data/transition";
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Meridian Attribution · Marketing analytics" },
+      {
+        name: "description",
+        content:
+          "Explore how first-touch, linear, and last-touch attribution change the story behind marketing revenue.",
+      },
+    ],
+    links: [{ rel: "preconnect", href: "https://fonts.googleapis.com" }],
+  }),
+  component: AttributionDashboard,
+});
+
+function AttributionDashboard() {
+  const [model, setModel] = useState<AttributionModel>("first");
+  const reducedMotion = useReducedMotion();
+  const snapshot = useTransitionSnapshot(model, reducedMotion ? 1 : 720);
+  const channels = useMemo(
+    () => interpolateModelData(getModelData(snapshot.from), getModelData(snapshot.to), snapshot.t),
+    [snapshot.from, snapshot.to, snapshot.t],
+  );
+
+  const activeModel = MODELS.find((item) => item.id === model)!;
+  const totalMix = channels.reduce((sum, channel) => sum + channel.revenue, 0);
+
+  return (
+    <main className="meridian-page min-h-screen bg-background text-foreground">
+      <header className="meridian-header border-b border-border/80">
+        <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-4 px-4 py-4 sm:px-7 lg:px-10">
+          <a
+            href="#top"
+            className="flex min-w-0 items-center gap-3"
+            aria-label="Meridian Attribution home"
+          >
+            <span className="meridian-mark" aria-hidden>
+              m
+            </span>
+            <span>
+              <span className="block text-sm font-bold tracking-tight">Meridian</span>
+              <span className="hidden text-[0.65rem] text-muted-foreground sm:block">
+                ATTRIBUTION INTELLIGENCE
+              </span>
+            </span>
+          </a>
+          <div className="flex shrink-0 items-center gap-2 sm:gap-4">
+            <span className="hidden text-xs text-muted-foreground sm:block">{QUARTER.label}</span>
+            <ThemeToggle />
+            <TemplateGuide />
+          </div>
+        </div>
+      </header>
+
+      <div id="top" className="mx-auto max-w-[1540px] px-4 pb-12 pt-8 sm:px-7 sm:pt-10 lg:px-10">
+        <section className="mb-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
+          <div className="max-w-3xl">
+            <p className="meridian-eyebrow">
+              MARKETING PERFORMANCE · {QUARTER.label.toUpperCase()}
+            </p>
+            <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
+              The revenue story changes with the model.
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+              See how each channel earns credit across the customer journey. Every view updates
+              together while the quarter total stays fixed.
+            </p>
+          </div>
+          <div className="w-full xl:w-auto">
+            <p className="mb-2 text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+              Attribution model
+            </p>
+            <ModelToggle model={model} onChange={setModel} />
+            <p className="mt-2 text-xs text-muted-foreground">{activeModel.blurb}</p>
+          </div>
+        </section>
+
+        <section aria-label="Quarter summary" className="mb-5 grid grid-cols-12 gap-3">
+          <KpiStrip channels={channels} model={model} />
+        </section>
+
+        <section aria-label="Revenue attribution" className="mb-5">
+          <div className="mb-3 flex flex-wrap items-end justify-between gap-3 px-1">
+            <div>
+              <p className="meridian-eyebrow">CREDIT DISTRIBUTION</p>
+              <h2 className="mt-1 text-lg font-semibold tracking-tight">Channel contribution</h2>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {currency(totalMix)} attributed · {number(QUARTER.totalConversions)} conversions
+            </p>
+          </div>
+          <WaterfallPanel
+            channels={channels}
+            from={snapshot.from}
+            to={snapshot.to}
+            t={snapshot.t}
+          />
+        </section>
+
+        <section
+          aria-label="Channel returns and customer journeys"
+          className="mb-5 grid min-w-0 grid-cols-1 items-stretch gap-5 xl:grid-cols-[1.02fr_0.98fr]"
+        >
+          <ScatterPanel channels={channels} />
+          <PathsPanel model={model} from={snapshot.from} to={snapshot.to} t={snapshot.t} />
+        </section>
+
+        <section aria-label="Channel detail">
+          <ChannelTable channels={channels} />
+        </section>
+
+        <footer className="mt-6 flex flex-col gap-2 border-t border-border/70 pt-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <span>Illustrative attribution data for a fictional B2B SaaS quarter.</span>
+          <span className="flex items-center gap-3">
+            <span className="flex items-center gap-1">
+              <ArrowDownRight className="size-3.5" /> {CHANNELS.length} channels
+            </span>
+            <span className="flex items-center gap-1">
+              <ArrowUpRight className="size-3.5" /> {currency(TOTAL_SPEND)} spend
+            </span>
+            <span className="sr-only">Current model: {activeModel.label}</span>
+          </span>
+        </footer>
+      </div>
+      <div className="sr-only" aria-live="polite">
+        Attribution model changed to {activeModel.label}
+      </div>
+    </main>
+  );
+}
